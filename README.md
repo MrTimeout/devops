@@ -1,0 +1,3 @@
+# Devops
+
+This is place where I will post a lot of stuff about go, kafka, kubernetes, ssl, bash, docker, nginx...
