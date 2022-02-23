@@ -1,0 +1,10 @@
+ARG VERSION=latest
+FROM ubuntu:${VERSION}
+
+RUN apt-get update && apt-get upgrade --yes && apt-get install --yes wget curl vim jq
+
+# This is the constant part of the entrypoint command.
+ENTRYPOINT [ "curl", "-vvv"]
+
+# This will be the parameters that will run by default if not passed anything.
+CMD [ "http://localhost:80" ]
