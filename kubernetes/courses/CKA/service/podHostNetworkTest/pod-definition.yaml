@@ -1,0 +1,33 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: port.host.network
+  labels:
+    hostNetwork: "true"
+    test: "yes"
+spec:
+  # https://kubernetes.io/docs/concepts/scheduling-eviction/assign-pod-node/
+  # kubectl get nodes --show-labels / kubectl label nodes {node-name} {label-key}={label-value}
+  nodeSelector:
+    kubernetes.io/hostname: "imatia21068"
+  hostNetwork: true
+  restartPolicy: Never
+  containers:
+  - name: server-nginx
+    image: nginx-template:latest
+    # Possible values: Always(https://docs.docker.com/engine/reference/commandline/pull/#pull-an-image-by-digest-immutable-identifier), IfNotPresent and Never -> We are using never because this is a local image
+    imagePullPolicy: Never
+    env:
+    - name: PORT
+      value: "65432"
+    command: ["/bin/bash", "-c", "envsubst < /etc/nginx/nginx.conf.template > /etc/nginx/nginx.conf && nginx -g 'daemon off;'"]
+    ports:
+      # Number of port to be exposed on the Pod IP address
+      - containerPort: 65432
+        protocol: TCP
+        # Number of port to expose on host
+        hostPort: 65432
+      # We are using this port only for testing purposes
+      - containerPort: 65431
+        protocol: TCP
+        hostPort: 65431
